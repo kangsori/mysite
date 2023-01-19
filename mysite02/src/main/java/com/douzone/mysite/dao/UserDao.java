@@ -5,47 +5,35 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.douzone.mysite.vo.GuestbookVo;
+import com.douzone.mysite.vo.UserVo;
 
 public class UserDao {
 
-	public List<GuestbookVo> findAll() {
-		List<GuestbookVo> result = new ArrayList<>();
+	
+	public UserVo findByEmailAndPassword(UserVo vo) {
+		UserVo result = null;
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		ResultSet rs =  null;
 		
 		try {
 			conn = getConnection();
 			
-			String sql =
-				"  select no,name,password,message,reg_date "
-				+ "from guestbook "
-				+ "order by no";
-			
+			String sql ="select no, name from user where email=? and password=password(?)";
 			pstmt = conn.prepareStatement(sql);
 			
-			rs = pstmt.executeQuery();
+			pstmt.setString(1, vo.getEmail());
+			pstmt.setString(2, vo.getPassword());
+	
+			rs=pstmt.executeQuery();
 			
-			while(rs.next()) {
-				Long no = rs.getLong(1);
-				String name = rs.getString(2);
-				String password = rs.getString(3);
-				String message = rs.getString(4);
-				String regDate = rs.getString(5);
-
-				GuestbookVo vo = new GuestbookVo();
-				vo.setNo(no);
-				vo.setName(name);
-				vo.setPassword(password);
-				vo.setMessage(message);
-				vo.setRegDate(regDate);
-				
-				result.add(vo);
+			if(rs.next()) {
+				result = new UserVo();
+				result.setNo(rs.getLong(1));
+				result.setName(rs.getString(2));
 			}
+			
 		} catch (SQLException e) {
 			System.out.println("error : "+e);
 		} finally {
@@ -63,22 +51,69 @@ public class UserDao {
 				e.printStackTrace();
 			}
 		}
+		
 		return result;
 	}
-
-	public void Insert(GuestbookVo vo) {
+	
+	public UserVo findUser(UserVo authUser) {
+		UserVo result = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs =  null;
+		
+		try {
+			conn = getConnection();
+			
+			String sql ="select no, name, email, gender from user where no=?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, authUser.getNo());
+			rs=pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result = new UserVo();
+				result.setNo(rs.getLong(1));
+				result.setName(rs.getString(2));
+				result.setEmail(rs.getString(3));
+				result.setGender(rs.getString(4));
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("error : "+e);
+		} finally {
+			try {
+				if(rs != null ) {
+					rs.close();
+				}
+				if(pstmt != null ) {
+					pstmt.close();
+				}
+				if(conn != null ) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return result;
+	}
+	
+	public void Update(UserVo vo) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		
 		try {
 			conn = getConnection();
 			
-			String sql ="insert into guestbook(name,password,message,reg_date) values (?,?,?,now())";
+			String sql ="update user set name=?,password=password(?),gender=? where no =?";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, vo.getName());
 			pstmt.setString(2, vo.getPassword());
-			pstmt.setString(3, vo.getMessage());
+			pstmt.setString(3, vo.getGender());
+			pstmt.setLong(4, vo.getNo());
 	
 			pstmt.executeQuery();
 			
@@ -86,40 +121,6 @@ public class UserDao {
 			System.out.println("error : "+e);
 		} finally {
 			try {
-				
-				if(pstmt != null ) {
-					pstmt.close();
-				}
-				if(conn != null ) {
-					conn.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-	}
-	
-	public void Delete(GuestbookVo vo) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		
-		try {
-			conn = getConnection();
-			
-			String sql ="delete from guestbook where no=? and password=?";
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setLong(1, vo.getNo());
-			pstmt.setString(2, vo.getPassword());
-		
-			pstmt.executeQuery();
-			
-		} catch (SQLException e) {
-			System.out.println("error : "+e);
-		} finally {
-			try {
-				
 				if(pstmt != null ) {
 					pstmt.close();
 				}
@@ -133,6 +134,40 @@ public class UserDao {
 		
 	}
 
+
+	public void Insert(UserVo vo) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = getConnection();
+			
+			String sql ="insert into user(name,email,password,gender,join_date) values (?,?,password(?),?,now())";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, vo.getName());
+			pstmt.setString(2, vo.getEmail());
+			pstmt.setString(3, vo.getPassword());
+			pstmt.setString(4, vo.getGender());
+	
+			pstmt.executeQuery();
+			
+		} catch (SQLException e) {
+			System.out.println("error : "+e);
+		} finally {
+			try {
+				if(pstmt != null ) {
+					pstmt.close();
+				}
+				if(conn != null ) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	
 	private Connection getConnection() throws SQLException {
 		Connection conn = null;
@@ -141,15 +176,12 @@ public class UserDao {
 			Class.forName("org.mariadb.jdbc.Driver");
 			
 			String url = "jdbc:mariadb://192.168.10.102:3307/webdb?charset=utf8";
-			
 			conn = DriverManager.getConnection(url, "webdb", "webdb");
-		
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패 :" +e);
 		}
 	
 		return conn;
 	}
-
 	
 }

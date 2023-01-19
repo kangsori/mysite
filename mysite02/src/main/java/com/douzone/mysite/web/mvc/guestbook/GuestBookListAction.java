@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.douzone.mysite.dao.GuestbookDao;
 import com.douzone.mysite.vo.GuestbookVo;
 import com.douzone.web.mvc.Action;
-import com.douzone.web.utils.WebUtil;
+import com.douzone.web.utils.MvcUtil;
 
 public class GuestBookListAction implements Action {
 
@@ -19,7 +19,7 @@ public class GuestBookListAction implements Action {
 		List<GuestbookVo> list = new GuestbookDao().findAll(); 
 		
 		request.setAttribute("list", list);
-		WebUtil.forward("guestbook/list.jsp", request, response);
+		MvcUtil.forward("guestbook/list.jsp", request, response);
 	}
 
 }

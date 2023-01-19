@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.douzone.mysite.dao.GuestbookDao;
 import com.douzone.mysite.vo.GuestbookVo;
 import com.douzone.web.mvc.Action;
+import com.douzone.web.utils.MvcUtil;
 
 public class GuestBookDeleteAction implements Action {
 
@@ -23,7 +24,7 @@ public class GuestBookDeleteAction implements Action {
 		
 		new GuestbookDao().Delete(vo);
 
-		response.sendRedirect(request.getContextPath()+"/guestbook?a=list");
+		MvcUtil.redirect(request.getContextPath()+"/guestbook?a=list", request, response);
 
 	}
 

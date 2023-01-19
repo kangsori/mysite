@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.douzone.mysite.dao.UserDao;
 import com.douzone.mysite.vo.UserVo;
 import com.douzone.web.mvc.Action;
+import com.douzone.web.utils.MvcUtil;
 
 public class JoinAction implements Action {
 
@@ -24,12 +25,10 @@ public class JoinAction implements Action {
 		vo.setEmail(email);
 		vo.setPassword(password);
 		vo.setGender(gender);
-		System.out.println(vo);
 		
-		//new UserDao().Insert(vo);
+		new UserDao().Insert(vo);
 
-		response.sendRedirect(request.getContextPath()+"/user?a=joinsuccess");
-
+		MvcUtil.redirect(request.getContextPath()+"/user?a=joinsuccess", request, response);
 	}
 
 }
