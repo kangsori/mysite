@@ -31,7 +31,7 @@ public class UpdateFormAction implements Action {
 		//////////////////////////////////////////////////////////////////////////
 		
 		UserVo vo = new UserDao().findUser(authUser);
-		request.setAttribute("vo", vo);
+		request.setAttribute("userVo", vo);
 		MvcUtil.forward("user/updateform.jsp", request, response);
 	}
 
