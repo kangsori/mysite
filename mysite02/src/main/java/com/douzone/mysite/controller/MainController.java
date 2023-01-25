@@ -13,9 +13,14 @@ import com.douzone.web.mvc.Action;
 public class MainController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	@Override
+	public void init() throws ServletException {
+		String configPath = getServletConfig().getInitParameter("config");
+		System.out.println("MainController.init() Called : "+configPath);
+		super.init();
+	}
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
-		
 		String actionName = request.getParameter("a");
 		
 		Action action = new MainActionFactory().getAction(actionName);
