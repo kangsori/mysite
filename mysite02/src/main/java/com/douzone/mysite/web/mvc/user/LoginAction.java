@@ -34,6 +34,7 @@ public class LoginAction implements Action {
 		/* login 처리 */
 		HttpSession session = request.getSession(true);
 		session.setAttribute("authUser", authUser);
+		session.setMaxInactiveInterval(30*60); 
 		
 		MvcUtil.redirect(request.getContextPath(), request, response);
 	}
