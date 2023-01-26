@@ -34,7 +34,7 @@ public class BoardDao {
 			pstmt.setString(1, "%"+kwd+"%");
 			pstmt.setString(2, "%"+kwd+"%");
 			pstmt.setString(3, "%"+kwd+"%");
-			pstmt.setInt(4, (10*(page-1))-1==-1? 0:(10*(page-1)));
+			pstmt.setInt(4, (rows*(page-1))-1==-1? 0:(rows*(page-1)));
 			pstmt.setInt(5, rows);
 			rs = pstmt.executeQuery();
 			
