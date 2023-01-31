@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Repository;
 
+import com.douzone.mysite.exception.UserRepositoryException;
 import com.douzone.mysite.vo.UserVo;
 
 @Repository
@@ -56,7 +57,7 @@ public class UserRepository {
 		try {
 			conn = getConnection();
 			
-			String sql = "select no, name from user where email = ? and password = password(?)";
+			String sql = "elect no, name from user where email = ? and password = password(?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, vo.getEmail());
 			pstmt.setString(2, vo.getPassword());
@@ -72,7 +73,7 @@ public class UserRepository {
 				result.setName(name);
 			}
 		} catch (SQLException e) {
-			System.out.println("Error:" + e);
+			throw new UserRepositoryException(e.toString());
 		} finally {
 			try {
 				if(rs != null) {
