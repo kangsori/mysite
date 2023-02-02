@@ -72,7 +72,7 @@ public class UserController {
 		UserVo userVo = userService.getUser(authUser.getNo());
 		
 		model.addAttribute("userVo", userVo);
-		return "user/update";
+		return "user/updateform";
 	}
 
 	@RequestMapping(value="/update", method=RequestMethod.POST)
