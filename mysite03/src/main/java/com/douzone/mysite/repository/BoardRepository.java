@@ -15,18 +15,18 @@ public class BoardRepository {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	public List<BoardVo> findAllbyPageAndKeyword(int page, String keyword, int size) {
+	public List<BoardVo> findAllbyPageAndKeyword(String keyword, int page, int rows) {
 		Map<String,Object> map = new HashMap<>();
-		map.put("startOffset", (page-1)*size);
+		map.put("startOffset", (page-1)*rows);
 		map.put("keyword", keyword);
-		map.put("size", size);
-		
-		return sqlSession.selectList("board.findAllbyPageAndKeyword",map);
+		map.put("rows", rows);
+		List<BoardVo> list =  sqlSession.selectList("board.findAllbyPageAndKeyword",map);
+
+		return list;
 	}
 
 	public int getTotalCount(String keyword) {
-		sqlSession.selectOne("board.getTotalCount",keyword);
-		return 0;
+		return sqlSession.selectOne("board.getTotalCount",keyword);
 	}
 
 }

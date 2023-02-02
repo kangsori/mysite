@@ -41,7 +41,7 @@ public class ListAction implements Action {
 		request.setAttribute("endPage", endPage);
 		request.setAttribute("prevPage", prevPage);
 		request.setAttribute("nextPage", nextPage);
-		request.setAttribute("startno", startNo);
+		request.setAttribute("startNo", startNo);
 		
 		/*
 		map.put("list", list);

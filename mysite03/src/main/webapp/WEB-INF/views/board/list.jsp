@@ -14,7 +14,7 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"/>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="${pageContext.request.contextPath }/board" method="post">
+				<form id="search_form" action="${pageContext.request.contextPath }/board/list" method="post">
 					<input type="text" id="kwd" name="kwd" value="${kwd }">
 					<input type="submit" value="찾기">
 				</form>
@@ -53,17 +53,17 @@
 				
 				<!-- pager 추가 -->
 				<div class="pager">
-					<select name="rows" onchange="location.href='${pageContext.request.contextPath }/board?kwd=${kwd}&rows='+this.value">
+					<select name="rows" onchange="location.href='${pageContext.request.contextPath }/board/list?kwd=${kwd}&rows='+this.value">
 						<option value=5 <c:if test="${rows==5}">selected</c:if>>5</option>
 						<option value=10 <c:if test="${rows==10}">selected</c:if>>10</option>
 						<option value=20 <c:if test="${rows==20}">selected</c:if>>20</option>
 					</select>
 					<ul>
-						<c:if test="${prevPage != 0 }"><li><a href="${pageContext.request.contextPath }/board?page=${prevPage}&rows=${rows}&kwd=${kwd}">◀</a></li></c:if>
+						<c:if test="${prevPage != 0 }"><li><a href="${pageContext.request.contextPath }/board/list?page=${prevPage}&rows=${rows}&kwd=${kwd}">◀</a></li></c:if>
 						<c:forEach var="i" begin="${beginPage }" end="${endPage }" step="1" varStatus="status">
-							<li <c:if test="${page==i}">class="selected"</c:if>><a href="${pageContext.request.contextPath }/board?page=${i}&rows=${rows}&kwd=${kwd}">${i}</a></li>
+							<li <c:if test="${page==i}">class="selected"</c:if>><a href="${pageContext.request.contextPath }/board/list?page=${i}&rows=${rows}&kwd=${kwd}">${i}</a></li>
 						</c:forEach>
-						<c:if test="${nextPage != 0 }"><li><a href="${pageContext.request.contextPath }/board?page=${nextPage }&rows=${rows}&kwd=${kwd}">▶</a></li></c:if>
+						<c:if test="${nextPage != 0 }"><li><a href="${pageContext.request.contextPath }/board/list?page=${nextPage }&rows=${rows}&kwd=${kwd}">▶</a></li></c:if>
 					</ul>
 				</div>					
 				<!-- pager 추가 -->
