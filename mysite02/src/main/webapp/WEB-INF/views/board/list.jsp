@@ -27,7 +27,7 @@
 						<th>작성일</th>
 						<th>&nbsp;</th>
 					</tr>	
-					<c:set var="startno" value="${startno }" />	
+					<c:set var="startno" value="${startno }"  />	
 					<c:forEach items="${list }" var="vo" varStatus="status">
 						<tr>
 							<td>${startno - status.index }</td>
