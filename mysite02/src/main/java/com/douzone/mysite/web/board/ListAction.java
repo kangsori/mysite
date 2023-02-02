@@ -32,7 +32,7 @@ public class ListAction implements Action {
 	
 		request.setAttribute("page", page);
 		request.setAttribute("rows", rows);
-		request.setAttribute("kwd", kwd);
+		request.setAttribute("kwd", kwd) ;
 		
 		request.setAttribute("list", list);
 		request.setAttribute("totalCount", totalCount);
