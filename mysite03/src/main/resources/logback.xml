@@ -10,7 +10,9 @@
 	</appender>
 
 	<appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>/mysite-logs/exception.log</file>
+		<file>
+		/Users/riversound/douzone/eclipse-workspace/mysite/mysite-logs/exception.log
+		</file>
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<Pattern>
 				%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n
@@ -32,7 +34,7 @@
 		<appender-ref ref="consoleAppender" />
     </logger>
 	
-	<root level="debug">
+	<root level="warn">
 		<appender-ref ref="consoleAppender" />
 	</root>
 </configuration>

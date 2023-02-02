@@ -52,17 +52,17 @@
 				
 				<!-- pager 추가 -->
 				<div class="pager">
-					<select name="rows" onchange="location.href='${pageContext.request.contextPath }/board?page=${page}&kwd=${kwd}&rows='+this.value">
+					<select name="rows" onchange="location.href='${pageContext.request.contextPath }/board?kwd=${kwd}&rows='+this.value">
+						<option value=5 <c:if test="${rows==5}">selected</c:if>>5</option>
 						<option value=10 <c:if test="${rows==10}">selected</c:if>>10</option>
 						<option value=20 <c:if test="${rows==20}">selected</c:if>>20</option>
-						<option value=30 <c:if test="${rows==30}">selected</c:if>>30</option>
 					</select>
 					<ul>
-						<c:if test="${page > beginNo }"><li><a href="${pageContext.request.contextPath }/board?page=${page-1}&rows=${rows}&kwd=${kwd}">◀</a></li></c:if>
-						<c:forEach var="i" begin="${beginNo }" end="${(beginNo+pageNo)-1 }" step="1" varStatus="status">
+						<c:if test="${prevPage != 0 }"><li><a href="${pageContext.request.contextPath }/board?page=${prevPage}&rows=${rows}&kwd=${kwd}">◀</a></li></c:if>
+						<c:forEach var="i" begin="${beginPage }" end="${endPage }" step="1" varStatus="status">
 							<li <c:if test="${page==i}">class="selected"</c:if>><a href="${pageContext.request.contextPath }/board?page=${i}&rows=${rows}&kwd=${kwd}">${i}</a></li>
 						</c:forEach>
-						<c:if test="${page < beginNo+pageNo-1}"><li><a href="${pageContext.request.contextPath }/board?page=${page+1}&rows=${rows}&kwd=${kwd}">▶</a></li></c:if>
+						<c:if test="${nextPage != 0 }"><li><a href="${pageContext.request.contextPath }/board?page=${nextPage }&rows=${rows}&kwd=${kwd}">▶</a></li></c:if>
 					</ul>
 				</div>					
 				<!-- pager 추가 -->
