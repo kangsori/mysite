@@ -26,10 +26,11 @@
 						<th>조회수</th>
 						<th>작성일</th>
 						<th>&nbsp;</th>
-					</tr>		
-					<c:forEach items="${list }" var="vo" >
+					</tr>	
+					<c:set var="startno" value="${startno }" />	
+					<c:forEach items="${list }" var="vo" varStatus="status">
 						<tr>
-							<td>${vo.no }</td>
+							<td>${startno - status.index }</td>
 							<td style="text-align:left; padding-left: ${vo.depth*10}px; ">
 								<c:if test="${vo.depth != 0 }">
 									<img src="${pageContext.servletContext.contextPath }/assets/images/reply.png">

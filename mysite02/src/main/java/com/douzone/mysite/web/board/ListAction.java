@@ -29,6 +29,7 @@ public class ListAction implements Action {
 		int endPage = totalPage<(beginPage+PAGE_COUNT-1)? totalPage :(beginPage+PAGE_COUNT-1) ;//8페이지 
 		int prevPage = (page-1); 
 		int nextPage = (page+1)>totalPage? 0:(page+1); 
+		int startNo = totalCount -((page-1)*rows)  ;
 	
 		request.setAttribute("page", page);
 		request.setAttribute("rows", rows);
@@ -40,6 +41,7 @@ public class ListAction implements Action {
 		request.setAttribute("endPage", endPage);
 		request.setAttribute("prevPage", prevPage);
 		request.setAttribute("nextPage", nextPage);
+		request.setAttribute("startno", startNo);
 		
 		/*
 		map.put("list", list);
