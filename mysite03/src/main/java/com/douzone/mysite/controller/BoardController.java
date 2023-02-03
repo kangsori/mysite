@@ -9,24 +9,48 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.douzone.mysite.service.BoardService;
+import com.douzone.mysite.vo.BoardVo;
 
 @Controller
 @RequestMapping("board")
 public class BoardController {
-	
+
 	@Autowired
 	private BoardService boardService;
-	
-	@RequestMapping(value="/list")
-	public String list(String kwd,String page,String rows,Model model){
+
+	@RequestMapping(value = "/list")
+	public String list(String kwd, String page, String rows, Model model) {
 		int setPage = page == null ? 1 : Integer.parseInt(page);
 		int setRows = rows == null ? 5 : Integer.parseInt(rows);
-		
-		Map<String,Object> map = boardService.getContentsList(kwd,setPage,setRows);
-		
-		//패킹한걸 푸는것
+
+		Map<String, Object> map = boardService.getContentsList(kwd, setPage, setRows);
+
+		// 패킹한걸 푸는것
 		model.addAllAttributes(map);
-		
+
 		return "board/list";
+	}
+
+	@RequestMapping(value = "/write", method = RequestMethod.GET)
+	public String write(Long no, Model model) {
+		model.addAttribute("no", no);
+
+		return "/board/write";
+	}
+
+	@RequestMapping(value = "/write", method = RequestMethod.POST)
+	public String write(BoardVo vo) {
+		boardService.addContents(vo);
+
+		return "/board/write";
+	}
+
+	@RequestMapping(value = "/view")
+	public String view(Long no, Model model) {
+		BoardVo vo = boardService.getContents(no);
+
+		model.addAttribute("boardVo", vo);
+
+		return "/board/view";
 	}
 }

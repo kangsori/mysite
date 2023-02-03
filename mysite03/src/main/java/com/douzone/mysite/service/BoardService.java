@@ -20,12 +20,12 @@ public class BoardService {
 	
 	//게시물등록
 	public void addContents(BoardVo vo) {
-		
+		boardRepository.addContent(vo);
 	}
 	
 	//뷰
 	public BoardVo getContents(Long no) {
-		return null;
+		return boardRepository.getView(no);
 	}
 	
 	//수정모드 (userno은 보안으로 추가된것)

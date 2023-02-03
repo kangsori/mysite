@@ -28,5 +28,13 @@ public class BoardRepository {
 	public int getTotalCount(String keyword) {
 		return sqlSession.selectOne("board.getTotalCount",keyword);
 	}
+	
+	public void addContent(BoardVo vo) {
+		sqlSession.insert("addContent",vo);
+	}
+	
+	public BoardVo getView(Long no) {
+		return sqlSession.selectOne("board.getView",no);
+	}
 
 }

@@ -4,18 +4,18 @@
 <mapper namespace="board">
 
 	<resultMap id="boardvo" type="boardvo">
-	   <id property="no" column="no" />
-	   <result property="title" column="title" />
-	   <result property="content" column="content" />
-	   <result property="hit" column="hit" />
-	   <result property="regDate" column="reg_date" />
-	   <result property="groupNo" column="g_no" />
-	   <result property="orderNo" column="o_no" />
-	   <result property="depth" column="depth" />
-	   <result property="userNo" column="user_no" />
-	   <result property="userName" column="name" />
+		<id property="no" column="no" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="hit" column="hit" />
+		<result property="regDate" column="reg_date" />
+		<result property="groupNo" column="g_no" />
+		<result property="orderNo" column="o_no" />
+		<result property="depth" column="depth" />
+		<result property="userNo" column="user_no" />
+		<result property="userName" column="name" />
 	</resultMap>
-	
+
 	<select id="findAllbyPageAndKeyword" parameterType="map"
 		resultMap="boardvo">
 		<![CDATA[
@@ -36,4 +36,20 @@
 			where a.title like '%${keyword }%' or a.content like '%${keyword }%' or b.name like '%${keyword }%' 
 		]]>
 	</select>
+
+	<select id="getView" parameterType="long" resultMap="boardvo">
+		<![CDATA[
+			select no,title,content,hit,reg_date,g_no,o_no,depth,user_no
+			from board 
+			where no=#{no }
+		]]>
+	</select>
+	
+	<insert id="addContent" parameterType="boardvo" >
+		<![CDATA[
+			insert board(title,content,hit,reg_date,g_no,o_no,depth,user_no) 
+			select #{title },#{content },0,now(),ifnull(max(g_no),0)+1,1,0,#{userNo } 
+			from board
+		]]>
+	</insert>
 </mapper>
