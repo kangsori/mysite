@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<% pageContext.setAttribute("newline", "\n"); %>
+<% pageContext.setAttribute("newline", "\n");%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,11 +34,11 @@
 				</table>
 				<div class="bottom">
 					<c:if test="${not empty authUser }">
-						<a href="${pageContext.request.contextPath }/board?a=writeform&no=${boardVo.no }">답글작성</a>
+						<a href="${pageContext.request.contextPath }/board/write?no=${boardVo.no }&userNo=${authUser.no }">답글작성</a>
 					</c:if>
-					<a href="${pageContext.request.contextPath }/board/list">글목록</a>
+					<a href="${pageContext.request.contextPath }/board/list?kwd=${kwd }&page=${page }&rows=${rows }">글목록</a>
 					<c:if test="${authUser.no == boardVo.userNo}">
-						<a href="${pageContext.request.contextPath }/board?a=modifyform&no=${boardVo.no }">글수정</a>
+						<a href="${pageContext.request.contextPath }/board/modify?no=${boardVo.no }&kwd=${kwd }&page=${page }&rows=${rows }">글수정</a>
 					</c:if>
 					
 				</div>

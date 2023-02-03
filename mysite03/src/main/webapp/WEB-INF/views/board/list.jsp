@@ -35,14 +35,14 @@
 								<c:if test="${vo.depth != 0 }">
 									<img src="${pageContext.servletContext.contextPath }/assets/images/reply.png">
 								</c:if>
-								<a href="${pageContext.request.contextPath }/board/view?no=${vo.no }">${vo.title }</a>
+								<a href="${pageContext.request.contextPath }/board/view?no=${vo.no }&kwd=${kwd }&page=${page }&rows=${rows }">${vo.title }</a>
 							</td>
 							<td>${vo.userName }</td>
 							<td>${vo.hit }</td>
 							<td>${vo.regDate }</td>
 							<td>
 								<c:if test="${authUser.no == vo.userNo}">
-									<a href="${pageContext.request.contextPath }/board?a=delete&no=${vo.no }" class="del">
+									<a href="${pageContext.request.contextPath }/board/delete?no=${vo.no }&userNo=${authUser.no}" class="del">
 										<img src="${pageContext.servletContext.contextPath }/assets/images/recycle.png">
 									</a>
 								</c:if>

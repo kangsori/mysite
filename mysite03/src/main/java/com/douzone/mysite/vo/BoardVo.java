@@ -27,7 +27,7 @@ public class BoardVo {
 	public String getContent() {
 		return content;
 	}
-	public void setContents(String content) {
+	public void setContent(String content) {
 		this.content = content;
 	}
 	public Integer getHit() {

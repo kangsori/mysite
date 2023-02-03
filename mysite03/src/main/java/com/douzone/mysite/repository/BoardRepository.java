@@ -36,5 +36,25 @@ public class BoardRepository {
 	public BoardVo getView(Long no) {
 		return sqlSession.selectOne("board.getView",no);
 	}
+	
+	
+	public BoardVo modifyContentView(Long no) {
+		return sqlSession.selectOne("board.getView",no);
+	}
+	
+	public void doModify(BoardVo vo) {
+		sqlSession.update("doModify",vo);
+		
+	}
+	
+	public void doDelete(Long no, Long userNo) {
+		Map<String,Long> map = new HashMap<>();
+		map.put("no", no);
+		map.put("userNo", userNo);
+		
+		sqlSession.delete("doDelete",map);
+	}
+
+	
 
 }

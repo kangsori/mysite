@@ -37,6 +37,20 @@
 		]]>
 	</select>
 
+	<insert id="addContent" parameterType="boardvo" >
+		<choose>
+			<when test="">
+				<![CDATA[
+					insert board(title,content,hit,reg_date,g_no,o_no,depth,user_no) 
+					select #{title },#{content },0,now(),ifnull(max(g_no),0)+1,1,0,#{userNo } 
+					from board
+				]]>
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</insert>
+	
 	<select id="getView" parameterType="long" resultMap="boardvo">
 		<![CDATA[
 			select no,title,content,hit,reg_date,g_no,o_no,depth,user_no
@@ -45,11 +59,19 @@
 		]]>
 	</select>
 	
-	<insert id="addContent" parameterType="boardvo" >
+	<update id="doModify" parameterType="boardvo">
 		<![CDATA[
-			insert board(title,content,hit,reg_date,g_no,o_no,depth,user_no) 
-			select #{title },#{content },0,now(),ifnull(max(g_no),0)+1,1,0,#{userNo } 
-			from board
+			update board
+			set title=#{title }, content=#{content }
+			where no=#{no }
 		]]>
-	</insert>
+	</update>
+	
+	<delete id="doDelete" parameterType="map">
+		<![CDATA[
+			delete from board
+			where no = #{no} and user_no = #{userNo}
+		]]>
+	</delete>
+	
 </mapper>

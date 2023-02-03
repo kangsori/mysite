@@ -31,17 +31,17 @@ public class BoardService {
 	//수정모드 (userno은 보안으로 추가된것)
 	public BoardVo getContents(Long no, Long userNo) {
 		//액세스 제어 필요함
-		return null;
+		return boardRepository.modifyContentView(no);
 	}
 	
 	//업데이트
 	public void updateContents(BoardVo vo) {
-		
+		boardRepository.doModify(vo);
 	}
 	
 	//삭제
 	public void deleteContents(Long no, Long userNo) {
-		
+		boardRepository.doDelete(no,userNo);
 	}
 	
 	public Map<String,Object> getContentsList(String kwd, int page, int rows) {
