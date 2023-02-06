@@ -28,6 +28,11 @@ public class BoardService {
 		return boardRepository.getView(no);
 	}
 	
+	// 조회수 증
+	public void updateHit(Long no) {
+		boardRepository.updateHit(no);
+	}
+	
 	//수정모드 (userno은 보안으로 추가된것)
 	public BoardVo getContents(Long no, Long userNo) {
 		//액세스 제어 필요함
@@ -73,4 +78,6 @@ public class BoardService {
 		
 		return map;
 	}
+
+	
 }

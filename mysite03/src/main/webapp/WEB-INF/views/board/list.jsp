@@ -42,7 +42,7 @@
 							<td>${vo.regDate }</td>
 							<td>
 								<c:if test="${authUser.no == vo.userNo}">
-									<a href="${pageContext.request.contextPath }/board/delete?no=${vo.no }&userNo=${authUser.no}" class="del">
+									<a href="${pageContext.request.contextPath }/board/delete?no=${vo.no }" class="del">
 										<img src="${pageContext.servletContext.contextPath }/assets/images/recycle.png">
 									</a>
 								</c:if>
@@ -70,7 +70,7 @@
 				
 				<c:if test="${not empty authUser }">
 					<div class="bottom">
-						<a href="${pageContext.request.contextPath }/board/write?no=0" id="new-book">글쓰기</a>
+						<a href="${pageContext.request.contextPath }/board/write" id="new-book">글쓰기</a>
 					</div>	
 				</c:if>
 							

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.douzone.mysite.vo.BoardVo;
 
@@ -29,12 +30,24 @@ public class BoardRepository {
 		return sqlSession.selectOne("board.getTotalCount",keyword);
 	}
 	
+	@Transactional
 	public void addContent(BoardVo vo) {
-		sqlSession.insert("addContent",vo);
+		// 답글일 경우 
+		if(!vo.getNo().equals(0L)) {
+			//부모글 찾아서 자식업데이트
+			sqlSession.update("board.updateOrderNo",vo);
+		}
+
+		sqlSession.insert("board.addContent",vo);
 	}
 	
 	public BoardVo getView(Long no) {
 		return sqlSession.selectOne("board.getView",no);
+	}
+	
+	public void updateHit(Long no) {
+		//조회수 업데이트 
+		sqlSession.update("board.updateHit",no);
 	}
 	
 	
@@ -43,7 +56,7 @@ public class BoardRepository {
 	}
 	
 	public void doModify(BoardVo vo) {
-		sqlSession.update("doModify",vo);
+		sqlSession.update("board.doModify",vo);
 		
 	}
 	
@@ -52,8 +65,10 @@ public class BoardRepository {
 		map.put("no", no);
 		map.put("userNo", userNo);
 		
-		sqlSession.delete("doDelete",map);
+		sqlSession.delete("board.doDelete",map);
 	}
+
+	
 
 	
 

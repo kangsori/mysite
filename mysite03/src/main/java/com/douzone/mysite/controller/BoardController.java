@@ -2,6 +2,9 @@ package com.douzone.mysite.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.douzone.mysite.security.Auth;
+import com.douzone.mysite.security.AuthUser;
 import com.douzone.mysite.service.BoardService;
 import com.douzone.mysite.vo.BoardVo;
 import com.douzone.mysite.vo.UserVo;
@@ -22,11 +28,11 @@ public class BoardController {
 	private BoardService boardService;
 
 	@RequestMapping(value = "/list")
-	public String list(String kwd, String page, String rows, Model model) {
-		int setPage = page == null ? 1 : Integer.parseInt(page);
-		int setRows = rows == null ? 5 : Integer.parseInt(rows);
-
-		Map<String, Object> map = boardService.getContentsList(kwd, setPage, setRows);
+	public String list(@RequestParam(value="kwd", required=true, defaultValue="") String kwd, 
+					   @RequestParam(value="page", required=true, defaultValue="1") Integer page, 
+					   @RequestParam(value="rows", required=true, defaultValue="5") Integer rows, 	
+			           Model model) {
+		Map<String, Object> map = boardService.getContentsList(kwd, page, rows);
 
 		// 패킹한걸 푸는것
 		model.addAllAttributes(map);
@@ -34,13 +40,16 @@ public class BoardController {
 		return "board/list";
 	}
 
+	@Auth
 	@RequestMapping(value = "/write", method = RequestMethod.GET)
-	public String write(Long no, Model model) {
+	public String write(@RequestParam(value="no", required = true, defaultValue ="0") Integer no, 
+			            Model model) {
 		model.addAttribute("no", no);
 
 		return "/board/write";
 	}
 
+	@Auth
 	@RequestMapping(value = "/write", method = RequestMethod.POST)
 	public String write(BoardVo vo) {
 		boardService.addContents(vo);
@@ -49,9 +58,26 @@ public class BoardController {
 	}
 
 	@RequestMapping(value = "/view")
-	public String view(Long no,String kwd, String page, String rows, Model model) {
+	public String view(Long no,String kwd, String page, String rows, Model model
+			           ,HttpServletRequest request
+			           ,HttpServletResponse response) {
+		String cookieValue = "";
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(request.getParameter("no"))) {
+                    cookieValue= cookie.getValue();
+                }
+            }
+        } 
+		
+		if(cookieValue.equals("")) {
+			Cookie c = new Cookie(request.getParameter("no"),request.getParameter("no"));
+            c.setMaxAge(60 * 60 * 24);  /* 쿠키 시간 */
+            response.addCookie(c);
+            boardService.updateHit(no);
+		}
 		BoardVo vo = boardService.getContents(no);
-
 		model.addAttribute("boardVo", vo);
 		model.addAttribute("kwd",kwd);
 		model.addAttribute("page",page);
@@ -60,31 +86,28 @@ public class BoardController {
 		return "/board/view";
 	}
 	
+	@Auth
 	@RequestMapping(value="/delete")
-	public String delete(Long no,Long userNo) {
-		boardService.deleteContents(no, userNo);
+	public String delete(@AuthUser UserVo authUser,Long no) {
+		boardService.deleteContents(no, authUser.getNo());
 		return "redirect:/board/list";
 	}
 	
+	@Auth
 	@RequestMapping(value="/modify", method = RequestMethod.GET)
-	public String modify(Long no,String kwd, String page, String rows,HttpSession session, Model model) {
-		// Access Control
-		UserVo authUser = (UserVo)session.getAttribute("authUser");
+	public String modify(@AuthUser UserVo authUser, Long no,String kwd, String page, String rows, Model model) {
+
 		model.addAttribute("kwd",kwd);
 		model.addAttribute("page",page);
 		model.addAttribute("rows",rows);
 		
-		if(authUser == null) {
-			model.addAttribute("no",no);
-			return "/board/view";
-		}
-		//////////////////////////////////////////////////
 		BoardVo boardVo =boardService.getContents(no,authUser.getNo());
 		model.addAttribute("boardVo",boardVo);
 		
 		return "/board/modify";
 	}
 	
+	@Auth
 	@RequestMapping(value="/modify", method = RequestMethod.POST)
 	public String modify(BoardVo vo,String kwd, String page, String rows,Model model) {
 		boardService.updateContents(vo);

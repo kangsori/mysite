@@ -39,7 +39,7 @@
 
 	<insert id="addContent" parameterType="boardvo" >
 		<choose>
-			<when test="">
+			<when test='no == 0'>
 				<![CDATA[
 					insert board(title,content,hit,reg_date,g_no,o_no,depth,user_no) 
 					select #{title },#{content },0,now(),ifnull(max(g_no),0)+1,1,0,#{userNo } 
@@ -47,9 +47,30 @@
 				]]>
 			</when>
 			<otherwise>
+				<![CDATA[
+					insert board(title,content,hit,reg_date,g_no,o_no,depth,user_no) 
+					select #{title },#{content },0,now(),g_no,o_no+1,depth+1,#{userNo } 
+					from board
+					where no = #{no }
+				]]>
 			</otherwise>
 		</choose>
 	</insert>
+	
+	<update id="updateOrderNo" parameterType="boardvo">
+		<selectKey keyProperty="groupNo,orderNo" resultType="boardvo" order="BEFORE">
+		<![CDATA[
+			select g_no as groupNo, o_no as orderNo
+			from board
+			where no = #{no }
+		]]>
+		</selectKey> 
+		<![CDATA[
+			update board 
+			set o_no = o_no+1 
+			where g_no =#{groupNo } and o_no >= ${groupNo } +1
+		]]>
+	</update>
 	
 	<select id="getView" parameterType="long" resultMap="boardvo">
 		<![CDATA[
@@ -58,6 +79,12 @@
 			where no=#{no }
 		]]>
 	</select>
+	
+	<update id="updateHit" parameterType="long">
+		<![CDATA[
+			update board set hit=hit+1 where no=#{no }
+		]]>
+	</update>
 	
 	<update id="doModify" parameterType="boardvo">
 		<![CDATA[
