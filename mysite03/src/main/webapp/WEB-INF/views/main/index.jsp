@@ -18,7 +18,7 @@ pageContext.setAttribute("newline", "\n");
 		<div id="wrapper">
 			<div id="content">
 				<div id="site-introduction">
-					<img id="profile" src="${pageContext.request.contextPath }/${site.profile }">
+					<img style="width: 500px;" id="profile" src="${pageContext.request.contextPath }/${site.profile }">
 					<h2>${site.welcome }</h2>
 					<p>
 						${fn:replace(site.description,newline,"<br>") }
