@@ -21,9 +21,13 @@ public class MainloadInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		SiteVo site = siteService.getSite();
-		servletContext.setAttribute("site",site);
-		System.out.println("here");
+		
+		SiteVo siteVo = (SiteVo)request.getServletContext().getAttribute("site");
+		
+		if(siteVo == null) {
+			siteVo = siteService.getSite();
+			servletContext.setAttribute("siteVo",siteVo);
+		}
 		
 		request.getRequestDispatcher("/WEB-INF/views/main/index.jsp").forward(request, response);
 		

@@ -78,6 +78,12 @@
 	   <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
 	   <property name="prefix" value="/WEB-INF/views/" />
 	   <property name="suffix" value=".jsp" />
+	   <property name="exposeContextBeansAsAttributes" value="true" />
+	   <property name="exposedContextBeanNames" >
+	 		<list>
+	 			<value>site</value>
+	 		</list>
+	   </property>
 	</bean>
 	
 	<!-- 6. MessageSource -->
@@ -101,6 +107,9 @@
 
 	<!-- mvc url-resource mapping -->
 	<mvc:resources mapping="/assets/upload-images/**" location="file:/Users/riversound/mysite-uploads/"/>
+	
+	<!-- ApplicationContextEventListener -->
+	<bean class="com.douzone.mysite.event.ApplicationContextEventListener" />
 
 	<context:annotation-config />
 	<context:component-scan base-package="com.douzone.mysite.controller" />

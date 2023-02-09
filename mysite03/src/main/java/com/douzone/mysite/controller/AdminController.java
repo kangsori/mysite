@@ -2,7 +2,9 @@ package com.douzone.mysite.controller;
 
 import javax.servlet.ServletContext;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +27,9 @@ public class AdminController {
 	
 	@Autowired
 	private FileuploadService fileuploadService;
+	
+	@Autowired
+	private ApplicationContext applicationContext;
 
 	@RequestMapping("")
 	public String main(Model model) {
@@ -37,11 +42,25 @@ public class AdminController {
 	@RequestMapping("/main/update")
 	public String update(SiteVo vo, MultipartFile file) {
 		String profile = fileuploadService.restore(file);
-		vo.setProfile(profile);
+		if(profile != null) {
+			vo.setProfile(profile);
+		}
+		
 		siteService.updateSite(vo);
 		
 		//객체를 servletContext에 저장
-		servletContext.setAttribute("site",siteService.getSite());
+		
+		SiteVo site = applicationContext.getBean(SiteVo.class);
+		siteService.updateSite(vo);
+//		site.setTitle(vo.getTitle());
+//		site.setWelcome(vo.getWelcome());
+//		site.setProfile(vo.getProfile());
+//		site.setDescription(vo.getDescription());
+		BeanUtils.copyProperties(vo, site);
+		
+		servletContext.setAttribute("site",vo);
+		
+		
 		
 		return "redirect:/admin";
 	}
