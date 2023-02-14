@@ -55,6 +55,10 @@ public class UserController {
 		return "user/login";
 	}
 	
+	@RequestMapping("/auth")
+	public void auth() {
+	}
+	
 	@Auth
 	@RequestMapping(value="/update", method=RequestMethod.GET)
 	public String update(@AuthUser UserVo authUser, Model model) {		

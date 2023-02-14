@@ -30,7 +30,6 @@ public class BoardRepository {
 		return sqlSession.selectOne("board.getTotalCount",keyword);
 	}
 	
-	@Transactional
 	public void addContent(BoardVo vo) {
 		// 답글일 경우 
 		if(!vo.getNo().equals(0L)) {

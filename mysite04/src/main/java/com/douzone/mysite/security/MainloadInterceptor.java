@@ -22,7 +22,7 @@ public class MainloadInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		
-		SiteVo siteVo = (SiteVo)request.getServletContext().getAttribute("site");
+		SiteVo siteVo = (SiteVo)request.getServletContext().getAttribute("siteVo");
 		
 		if(siteVo == null) {
 			siteVo = siteService.getSite();
