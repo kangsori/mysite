@@ -53,7 +53,6 @@
 						<form:errors path="password" />
 					</P>
 
-
 					<fieldset>
 						<legend>성별</legend>
 						<form:radiobutton path="gender" value="female" label="여" />
