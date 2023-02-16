@@ -1,24 +1,78 @@
 package com.douzone.mysite.config;
 
+import java.util.List;
+
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Import;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.douzone.mysite.config.web.FileuploadConfig;
-import com.douzone.mysite.config.web.MessageSourceConfig;
-import com.douzone.mysite.config.web.MvcConfig;
-import com.douzone.mysite.config.web.SecurityConfig;
-import com.douzone.mysite.event.ApplicationContextEventListener;
+import com.douzone.mysite.security.AuthInterceptor;
+import com.douzone.mysite.security.AuthUserHandlerMethodArgumentResolver;
+import com.douzone.mysite.security.LoginInterceptor;
+import com.douzone.mysite.security.LogoutInterceptor;
+import com.douzone.mysite.security.MainloadInterceptor;
 
-@EnableAspectJAutoProxy
-@ComponentScan({"com.douzone.mysite.controller"})
-@Import({MvcConfig.class, SecurityConfig.class, MessageSourceConfig.class, FileuploadConfig.class})
-public class WebConfig {
-
-	// Application Context Event Listener
+@SpringBootConfiguration
+public class WebConfig implements WebMvcConfigurer {
+	
+	// Argument Resolver
 	@Bean
-	public ApplicationContextEventListener applicationContextEventListener() {
-		return new ApplicationContextEventListener();
+	public HandlerMethodArgumentResolver handlerMethodArgumentResolver() {
+		return new AuthUserHandlerMethodArgumentResolver();
 	}
+
+	@Override
+	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+		resolvers.add(handlerMethodArgumentResolver());
+	}
+	
+	// main Interceptors
+	@Bean
+	public HandlerInterceptor mainloadInterceptor() {
+		return new MainloadInterceptor();
+	}
+		
+	// Security Interceptors
+	@Bean
+	public HandlerInterceptor loginInterceptor() {
+		return new LoginInterceptor();
+	}
+		
+	@Bean
+	public HandlerInterceptor logoutInterceptor() {
+		return new LogoutInterceptor();
+	}
+		
+	
+	@Bean
+	public HandlerInterceptor authInterceptor() {
+		return new AuthInterceptor();
+	}
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry
+			.addInterceptor(loginInterceptor())
+			.addPathPatterns("/user/auth");
+			
+		registry
+			.addInterceptor(logoutInterceptor())
+			.addPathPatterns("/user/logout");
+			
+		registry
+			.addInterceptor(mainloadInterceptor())
+			.addPathPatterns("/");
+			
+		registry
+			.addInterceptor(authInterceptor())
+			.addPathPatterns("/**")
+			.excludePathPatterns("/user/auth")
+			.excludePathPatterns("/user/logout")
+			.excludePathPatterns("/assets/**");
+	}
+		
+		
 }
