@@ -21,11 +21,9 @@ public class ApplicationContextEventListener {
 	private ApplicationContext applicationContext;
 	
 	@EventListener({ContextRefreshedEvent.class})
-	public void handleApplicationContextRefreshedEvent() {
-		System.out.println((Object)applicationContext.getClass());
-		System.out.println(System.identityHashCode(applicationContext));
-		System.out.println("--- Context Refreshed Event Received --- : " +applicationContext);
-		
+	public void handleContextRefreshedEvent() {
+		System.out.println("--- Context Refresh Event Received --- : " + applicationContext);
+	
 		InternalResourceViewResolver viewResolver = applicationContext.getBean(InternalResourceViewResolver.class);
 		viewResolver.setExposeContextBeansAsAttributes(true);
 		viewResolver.setExposedContextBeanNames("site");
@@ -46,7 +44,5 @@ public class ApplicationContextEventListener {
 		AutowireCapableBeanFactory factory = applicationContext.getAutowireCapableBeanFactory();
 		BeanDefinitionRegistry registry = (BeanDefinitionRegistry)factory;
 		registry.registerBeanDefinition("site", beanDefinition);
-		
 	}
-
 }
