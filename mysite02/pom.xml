@@ -4,6 +4,7 @@
    <groupId>com.douzone</groupId>
    <artifactId>mysite02</artifactId>
    <version>0.0.1-SNAPSHOT</version>
+   
   <packaging>war</packaging>
   
   <properties>
