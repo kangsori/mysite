@@ -9,8 +9,64 @@
 <head>
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-<link href="${pageContext.request.contextPath }/assets/css/user.css"
-	rel="stylesheet" type="text/css">
+<link href="${pageContext.request.contextPath }/assets/css/user.css" rel="stylesheet" type="text/css">
+<script src="${pageContext.request.contextPath }/jquery/jquery-3.6.0.js"></script>
+<script>
+	$(function(){
+		$("#join-form").submit(function(event){
+			event.preventDefault();
+			
+			var name = $("#name").val();
+			if(name == ''){
+				alert("이름을 입력해 주세요.");
+				$("#name").focus();
+				return;
+			}
+			
+			if(!$("#img-check").is(":visible")){
+				alert("이메일 중복 확인을 해 주세요.");
+				return;
+			}
+			
+			this.submit();
+		});
+		
+		$("#email").change(function(){
+			$("#img-check").hide();
+			$("#btn-checkemail").show();
+		});
+		
+		$("#btn-checkemail").click(function(){
+			var email = $("#email").val();
+			if(email===''){
+				return;
+			}
+			$.ajax({
+				url:"${pageContext.request.contextPath }/user/api/checkemail?email="+email,
+				type:"get",
+				dataType:"json",
+				error: function(){
+					console.log(status, error);
+				},
+				success: function(response){
+					if(response.result === 'fail'){
+						console.log(response.message);
+						return;
+					}
+					
+					if(response.data){
+						alert("존재하는 이메일 입니다. 다른 이메일을 선택해 주세요.");
+						$("#email").val("").focus();
+						return;
+					}
+					
+					$("#img-check").show();
+					$("#btn-checkemail").hide();
+				}
+			});
+		});
+	});
+</script>
 </head>
 <body>
 	<div id="container">
@@ -41,7 +97,8 @@
 
 					<label class="block-label" for="email">이메일</label> 
 					<form:input path="email" /> 
-					<input type="button" value="중복체크">
+					<img id="img-check" src="${pageContext.request.contextPath }/assets/images/check.png" style="width: 20px; vertical-align: bottom; display: none;" />
+					<input type="button" id="btn-checkemail" value="중복체크" style="display: ;">
 					<P style="color: #f00; text-align: left; padding: 0;">
 						<form:errors path="email" />
 					</P>

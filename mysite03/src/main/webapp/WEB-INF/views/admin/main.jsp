@@ -32,8 +32,6 @@
 						
 						<input type="submit" value="변경" />
 					</form>
-									
-				
 
 				</div>
 			</div>

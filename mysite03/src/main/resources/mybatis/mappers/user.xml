@@ -37,4 +37,14 @@
 		where no=?
 		]]>
 	</update>
+	
+	<select id="findByEmail" 
+	        resultType="uservo"
+	        parameterType="string">
+		<![CDATA[
+		select no, name, email, gender 
+		  from user 
+		 where email = #{email }
+		]]>
+	</select>
 </mapper>
