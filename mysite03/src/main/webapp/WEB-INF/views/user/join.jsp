@@ -10,24 +10,69 @@
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <link href="${pageContext.request.contextPath }/assets/css/user.css" rel="stylesheet" type="text/css">
-<script src="${pageContext.request.contextPath }/jquery/jquery-3.6.0.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script>
+var messageBox = function(title,message, callback){
+	$( "#dialog-message p").text(message);
+	$( "#dialog-message" )
+	.attr("title",title)
+	.dialog({
+		width: 340,
+		height: 150,
+		modal: true,
+		buttons: {
+			"확인": function(){
+				$(this).dialog('close');
+			}
+		},
+		close: callback
+	});
+}
 	$(function(){
+		
+		
+		
 		$("#join-form").submit(function(event){
 			event.preventDefault();
 			
-			var name = $("#name").val();
-			if(name == ''){
-				alert("이름을 입력해 주세요.");
-				$("#name").focus();
+			// 1. 이름 유효성 체크 
+			if($("#name").val() === ''){
+				messageBox("회원가입","이름을 입력해 주세요.",function(){
+					$("#name").focus();
+				});
 				return;
 			}
 			
+			// 2. 이메일 유효성 체크 
+			if($("#email").val() === ''){
+				messageBox("회원가입","이메일을 입력해 주세요.", function(){
+					$("#email").focus();
+				});
+				return;
+			}
+			
+			// 3. 이메일 중복 체크 유무 
 			if(!$("#img-check").is(":visible")){
-				alert("이메일 중복 확인을 해 주세요.");
+				messageBox("회원가입","이메일 중복 확인을 해 주세요.");
 				return;
 			}
 			
+			// 4. 비밀번호 유효성 체크 
+			if($("#password").val() === ''){
+				messageBox("회원가입","비밀번호를 입력해 주세요.", function(){
+					$("#password").focus();
+				});
+				return;
+			}
+			
+			// 5. 약관 동의 유무 
+			if(!$("#agree-prov").is(":checked")){
+				messageBox("회원가입","약관 동의를 해 주세요.");
+			}
+			
+			// 6. ok
 			this.submit();
 		});
 		
@@ -46,7 +91,7 @@
 				type:"get",
 				dataType:"json",
 				error: function(){
-					console.log(status, error);
+					console.error(status, error);
 				},
 				success: function(response){
 					if(response.result === 'fail'){
@@ -55,8 +100,9 @@
 					}
 					
 					if(response.data){
-						alert("존재하는 이메일 입니다. 다른 이메일을 선택해 주세요.");
-						$("#email").val("").focus();
+						messageBox("회원가입","존재하는 이메일 입니다. 다른 이메일을 선택해 주세요.", function(){
+							$("#email").val("").focus();
+						});
 						return;
 					}
 					
@@ -113,7 +159,7 @@
 					<fieldset>
 						<legend>성별</legend>
 						<form:radiobutton path="gender" value="female" label="여" />
-						<form:radiobutton path="gender" value="male" label="남"/>
+						<form:radiobutton path="gender" value="male" label="남" />
 					</fieldset>
 
 					<fieldset>
@@ -126,6 +172,10 @@
 
 				</form:form>
 			</div>
+		</div>
+		<div id="dialog-message" style="display: none;">
+  			<p style="line-height: 60px;">
+  			</p>
 		</div>
 		<c:import url="/WEB-INF/views/includes/navigation.jsp" />
 		<c:import url="/WEB-INF/views/includes/footer.jsp" />

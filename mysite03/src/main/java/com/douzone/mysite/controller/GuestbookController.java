@@ -17,7 +17,7 @@ public class GuestbookController {
 	@Autowired
 	private GuestbookService guestbookService;
 	
-	@RequestMapping(value="/list", method=RequestMethod.GET)
+	@RequestMapping(value="", method=RequestMethod.GET)
 	public String list(Model model) {
 		
 		List<GuestbookVo> list = guestbookService.getMessageList();
@@ -47,5 +47,11 @@ public class GuestbookController {
 		guestbookService.deleteMessage(vo);
 
 		return "redirect:/guestbook/list";
+	}
+	
+	@RequestMapping(value="/spa", method=RequestMethod.GET)
+	public String listspa() {
+		
+		return "guestbook/index-spa";
 	}
 }

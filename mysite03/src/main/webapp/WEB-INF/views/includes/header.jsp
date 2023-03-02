@@ -5,7 +5,7 @@
 		<div id="header">
 			<h1>
 				<!-- ${siteVo.title } -->
-				${site.title }
+				${siteVo.title }
 			</h1>
 			<ul>
 				<c:choose>
