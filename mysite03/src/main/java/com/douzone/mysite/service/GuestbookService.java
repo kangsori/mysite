@@ -19,6 +19,11 @@ public class GuestbookService {
 		return list;
 	}
 	
+	public List<GuestbookVo> getMessageList(Long startNo){
+		List<GuestbookVo> list=guestbookRepository.findAll(startNo);
+		return list;
+	}
+	
 	public void deleteMessage(GuestbookVo vo) {
 		guestbookRepository.Delete(vo);
 	}

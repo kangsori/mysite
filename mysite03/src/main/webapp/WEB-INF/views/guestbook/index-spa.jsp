@@ -10,7 +10,106 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/assets/css/guestbook-spa.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/jquery/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/ejs/ejs.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+var listItemTemplate = new EJS({
+	url: "${pageContext.request.contextPath }/assets/js/ejs/list-item-template.ejs"
+})
+
+// list 그리기 
+var render = function(vo, mode) {
+	/*
+	var htmls = 
+		"<li data-no='" + vo.no + "'>" +
+		"	<strong>" + vo.name + "</strong>" +
+		"	<p>" + vo.message + "</p>" +
+		"	<strong></strong>" +
+		"	<a href='' data-no='" + vo.no + "'>삭제</a>" + 
+		"</li>";
+	*/
+	
+	var htmls = listItemTemplate.render(vo);
+	
+	$("#list-guestbook")[mode? "prepend" : "append"](htmls);
+}
+
+// list 데이터 가져오기 
+var fetch = function(startNo) {
+	$.ajax({
+		url: "${pageContext.request.contextPath}/guestbook/api?sno="+startNo,
+		type: "get",
+		dataType: "json",
+		success: function(response) { 
+			if(response.result === 'fail') {
+				console.error(response.message);
+				return;
+			}
+			
+			response.data.forEach(function(vo){
+				render(vo,false);
+			});
+		}
+	});	
+}
+
+$(function(){
+	
+	//스크롤 이벤트 
+	$(window).scroll(function() {
+		var $window = $(this);
+		var $document = $(document);
+		
+		var windowHeight = $window.height();
+		var documentHeight = $document.height();
+		var scrollTop = $window.scrollTop();
+		
+		// 스크롤이 마지막일 때 
+		if(documentHeight < windowHeight + scrollTop + 10) {
+			// li 마지막 요소의 no 값 찾아서 fetch
+			var startNo = $("#list-guestbook li").last().data("no");
+			fetch(startNo);
+		}
+	});
+	
+	// 최초 리스트 가져오기
+	fetch(0);
+	
+	$("#add-form").submit(function(event){
+		event.preventDefault();
+		
+		// 1. 이름 유효성 체크 
+		if($("#input-name").val() === ''){
+			messageBox("방명록","이름을 입력해 주세요.",function(){
+				$("#input-name").focus();
+			});
+			return;
+		}
+		
+		// 2. 비밀번호 유효성 체크 
+		if($("#input-password").val() === ''){
+			messageBox("방명록","비밀번호를 입력해 주세요.", function(){
+				$("#input-password").focus();
+			});
+			return;
+		}
+		
+		// 3. 내용 유효성 체크 
+		if($("#tx-content").val() === ''){
+			messageBox("방명록","비밀번호를 입력해 주세요.", function(){
+				$("#tx-content").focus();
+			});
+			return;
+		}
+		
+		// 4. ok
+		this.submit();
+	});
+	
+	
+})
+
+</script>
 </head>
 <body>
 	<div id="container">
@@ -25,37 +124,6 @@
 					<input type="submit" value="보내기" />
 				</form>
 				<ul id="list-guestbook">
-
-					<li data-no=''>
-						<strong>지나가다가</strong>
-						<p>
-							별루입니다.<br>
-							비번:1234 -,.-
-						</p>
-						<strong></strong>
-						<a href='' data-no=''>삭제</a> 
-					</li>
-					
-					<li data-no=''>
-						<strong>둘리</strong>
-						<p>
-							안녕하세요<br>
-							홈페이지가 개 굿 입니다.
-						</p>
-						<strong></strong>
-						<a href='' data-no=''>삭제</a> 
-					</li>
-
-					<li data-no=''>
-						<strong>주인</strong>
-						<p>
-							아작스 방명록 입니다.<br>
-							테스트~
-						</p>
-						<strong></strong>
-						<a href='' data-no=''>삭제</a> 
-					</li>
-					
 									
 				</ul>
 			</div>

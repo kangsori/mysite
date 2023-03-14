@@ -19,6 +19,22 @@
 		]]>
 	</select>
 	
+	<select id="findAllBystartNo" resultMap="findAllList" parameterType="long">
+		<![CDATA[
+			select no, name, password, message, reg_date 
+			from guestbook 
+		]]>
+		<if test='startNo != 0'>
+			<![CDATA[
+				where no < #{startNo}
+			]]>
+		</if>
+		<![CDATA[
+			order by no desc
+			limit 10
+		]]>
+	</select>
+	
 	<insert id="Insert" parameterType="guestbookvo">
 		<![CDATA[
 			insert into guestbook(name,password,message,reg_date) 
